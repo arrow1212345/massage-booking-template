@@ -192,10 +192,10 @@ CREATE TABLE "notification_settings" (
 -- CreateTable
 CREATE TABLE "site_settings" (
     "id" TEXT NOT NULL DEFAULT 'default',
-    "site_name" TEXT NOT NULL DEFAULT 'Massage Booking Template',
-    "brand_name" TEXT NOT NULL DEFAULT 'Massage Studio',
-    "home_title" TEXT NOT NULL DEFAULT 'Massage appointments made simple',
-    "home_subtitle" TEXT NOT NULL DEFAULT 'A calm booking website for massage therapists and bodywork studios.',
+    "site_name" TEXT NOT NULL DEFAULT '按摩預約網站模板',
+    "brand_name" TEXT NOT NULL DEFAULT '按摩工作室',
+    "home_title" TEXT NOT NULL DEFAULT '讓客人更容易完成預約',
+    "home_subtitle" TEXT NOT NULL DEFAULT '一套適合按摩師、運動按摩工作室與身體放鬆服務使用的線上預約網站。',
     "contact_email" TEXT,
     "contact_line_url" TEXT,
     "booking_notice" TEXT,

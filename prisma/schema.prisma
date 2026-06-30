@@ -232,10 +232,10 @@ model NotificationSetting {
 
 model SiteSetting {
   id             String   @id @default("default")
-  siteName       String   @default("Massage Booking Template") @map("site_name")
-  brandName      String   @default("Massage Studio") @map("brand_name")
-  homeTitle      String   @default("Massage appointments made simple") @map("home_title")
-  homeSubtitle   String   @default("A calm booking website for massage therapists and bodywork studios.") @map("home_subtitle")
+  siteName       String   @default("按摩預約網站模板") @map("site_name")
+  brandName      String   @default("按摩工作室") @map("brand_name")
+  homeTitle      String   @default("讓客人更容易完成預約") @map("home_title")
+  homeSubtitle   String   @default("一套適合按摩師、運動按摩工作室與身體放鬆服務使用的線上預約網站。") @map("home_subtitle")
   contactEmail   String?  @map("contact_email")
   contactLineUrl String?  @map("contact_line_url")
   bookingNotice  String?  @map("booking_notice")

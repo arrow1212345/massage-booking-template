@@ -31,6 +31,45 @@ npm run dev
 
 後台登入密碼請設定在 `.env.local` 的 `ADMIN_PASSWORD`。
 
+### 建議使用 Codex 或 Claude Code 架站
+
+如果你不熟悉程式，可以把這個 repo 交給 Codex 或 Claude Code 協助架設。建議先要求 AI 不要立刻修改程式，而是先完成一輪架站訪談，確認所有營運資訊後再開始設定。
+
+你可以直接貼上這段指令：
+
+```text
+請協助我用這個 Massage Booking Template 架設一個按摩預約網站。
+在開始修改程式或部署前，請先逐項詢問我需要的網站資訊，包含品牌、服務、價格、地點、可預約時段、通知方式、Google Calendar、LINE、Email、後台密碼與部署網域。
+請整理成設定清單讓我確認，確認後再進行修改、資料庫 seed、環境變數設定與部署。
+不要使用任何範例金鑰，也不要把 .env 或正式金鑰提交到 GitHub。
+```
+
+AI 應先詢問並確認這些內容：
+
+- 品牌名稱、網站名稱、首頁標題、首頁說明文字
+- 主要服務項目：名稱、介紹、時間長度、價格、緩衝時間、是否啟用
+- 服務地點：店名、地址、是否需要客人填寫到府地址、哪些服務可在該地點預約
+- 可預約時段：每週可預約星期、開始時間、結束時間、固定休息時段
+- 預約流程：是否需要後台確認、取消或改期規則、預約成功後要顯示什麼
+- 客戶資料欄位：姓名、電話、Email、備註、是否需要地址
+- 通知方式：只用 Email、只用 LINE、或 Email + LINE
+- Email 設定：寄件網域、寄件人名稱、管理員收件信箱
+- LINE 設定：是否使用 LINE Login、Messaging API、圖文選單或推播通知
+- Google Calendar：要連接哪個 Google 帳號、是否用日曆事件阻擋可預約時段
+- 後台設定：管理員密碼、網站設定、是否開放 demo mode
+- 部署設定：Vercel 專案名稱、正式網域、資料庫供應商與地區
+- 安全檢查：確認 `.env`、`.vercel`、正式 token、私人 handoff 文件都沒有被提交
+
+建議流程是：
+
+1. 先完成訪談與設定清單。
+2. 修改 seed 與預設文案。
+3. 設定環境變數。
+4. 建立資料庫並執行 migration。
+5. 部署到 Vercel。
+6. 測試首頁、服務頁、預約頁、後台、Email、LINE 與 Google Calendar。
+7. 最後再 commit / push。
+
 ### 必要環境變數
 
 部署前請設定：
@@ -127,6 +166,45 @@ npm run dev
 Open http://localhost:3000.
 
 Set the admin login password in `.env.local` as `ADMIN_PASSWORD`.
+
+### Recommended Setup With Codex or Claude Code
+
+If you are not comfortable configuring the project manually, you can ask Codex or Claude Code to set up the website with you. The agent should not start editing immediately. It should first interview you, collect the required business information, and then ask you to confirm the setup plan.
+
+You can paste this prompt:
+
+```text
+Please help me set up this Massage Booking Template as a massage appointment website.
+Before changing code or deploying, ask me for every required website detail, including brand, services, pricing, locations, availability, notification channels, Google Calendar, LINE, Email, admin password, and deployment domain.
+Summarize the setup checklist for my confirmation. After I confirm, update the project, seed data, environment variables, and deployment.
+Do not use example credentials, and never commit .env files or production secrets to GitHub.
+```
+
+The agent should ask for and confirm:
+
+- Brand name, site name, homepage title, and homepage description
+- Services: name, description, duration, price, buffer time, and enabled status
+- Locations: studio name, address, whether clients must enter a custom in-home address, and which services are available there
+- Availability: available weekdays, start time, end time, and regular break times
+- Booking workflow: whether admin confirmation is required, cancellation/rescheduling rules, and success page copy
+- Client fields: name, phone, Email, notes, and whether address is required
+- Notification channels: Email only, LINE only, or Email + LINE
+- Email settings: sending domain, sender name, and admin notification inbox
+- LINE settings: LINE Login, Messaging API, rich menu, and push notification requirements
+- Google Calendar: which Google account to connect and whether calendar events should block availability
+- Admin settings: admin password, site settings, and whether demo mode should be enabled
+- Deployment: Vercel project name, production domain, database provider, and database region
+- Security check: verify that `.env`, `.vercel`, production tokens, and private handoff files are not committed
+
+Suggested setup flow:
+
+1. Complete the setup interview and checklist.
+2. Update seed data and default copy.
+3. Configure environment variables.
+4. Create the database and run migrations.
+5. Deploy to Vercel.
+6. Test the homepage, services page, booking flow, admin dashboard, Email, LINE, and Google Calendar.
+7. Commit and push only after the site is verified.
 
 ### Required Environment Variables
 
