@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { formatMoney } from "@/lib/format";
 import { isSlotAvailable, nextBookingNumber } from "@/lib/booking";
 import { sendEmail } from "@/lib/email";
+import { BookingWizard } from "./booking-wizard";
 
 async function createAppointment(formData: FormData) {
   "use server";
@@ -64,34 +64,24 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
   });
 
   return (
-    <main className="container" style={{ padding: "56px 0" }}>
-      <p className="eyebrow">線上預約</p>
-      <h1>{service.name}</h1>
-      <p>{service.description}</p>
-      <p><strong>{service.durationMinutes} 分鐘 · {formatMoney(service.basePriceCents)} 起</strong></p>
-      {query.error ? <div className="notice">請確認表單內容。你選擇的時段可能已經無法預約。</div> : null}
-      <form className="panel form" action={createAppointment}>
-        <input type="hidden" name="serviceId" value={service.id} />
-        <label>地點
-          <select name="locationId" required>
-            {locations.map((location) => (
-              <option key={location.id} value={location.id}>{location.name} · {formatMoney(location.locationPrices[0]?.priceCents ?? service.basePriceCents)}</option>
-            ))}
-          </select>
-        </label>
-        <div className="grid two">
-          <label>日期<input type="date" name="date" required /></label>
-          <label>時間<input type="time" name="time" required /></label>
-        </div>
-        <label>姓名<input name="clientName" required /></label>
-        <div className="grid two">
-          <label>Email<input name="clientEmail" type="email" required /></label>
-          <label>電話<input name="clientPhone" required /></label>
-        </div>
-        <label>到府地址（只有到府服務需要填寫）<input name="customAddress" /></label>
-        <label>備註<textarea name="note" rows={4} /></label>
-        <button type="submit">送出預約申請</button>
-      </form>
+    <main className="container booking-page">
+      <div className="booking-heading">
+        <p className="eyebrow">線上預約</p>
+        <h1>一步一步完成預約</h1>
+        <p className="lead">示範站採用分段式流程，讓客人一次只處理一件事：確認服務、選地點、選時間、填資料，再送出申請。</p>
+      </div>
+      <BookingWizard
+        service={{ id: service.id, name: service.name, description: service.description, durationMinutes: service.durationMinutes, basePriceCents: service.basePriceCents }}
+        locations={locations.map((location) => ({
+          id: location.id,
+          name: location.name,
+          address: location.address,
+          requiresCustomAddress: location.requiresCustomAddress,
+          priceCents: location.locationPrices[0]?.priceCents ?? service.basePriceCents,
+        }))}
+        action={createAppointment}
+        hasError={Boolean(query.error)}
+      />
     </main>
   );
 }
