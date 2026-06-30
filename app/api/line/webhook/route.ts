@@ -1,0 +1,3 @@
+import crypto from "crypto"; import { NextResponse } from "next/server";
+function verifySignature(body: string, signature: string | null) { const secret = process.env.LINE_MESSAGING_CHANNEL_SECRET; if (!secret || !signature) return false; const expected = crypto.createHmac("sha256", secret).update(body).digest("base64"); return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected)); }
+export async function POST(request: Request) { const body = await request.text(); if (!verifySignature(body, request.headers.get("x-line-signature"))) return NextResponse.json({ ok: false }, { status: 401 }); return NextResponse.json({ ok: true }); }

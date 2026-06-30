@@ -1,0 +1,3 @@
+import { redirect } from "next/navigation"; import { setClientSession } from "@/lib/auth";
+async function login(formData: FormData) { "use server"; const email = String(formData.get("email") || "").trim().toLowerCase(); if (email) { await setClientSession(email); redirect("/client/appointments"); } }
+export default function ClientLoginPage() { return <main className="container" style={{padding:'72px 0'}}><div className="panel"><h1>Client center</h1><p>Template login uses email session for local testing. Replace with magic link or LINE Login before production.</p><form action={login} className="form"><label>Email<input name="email" type="email" required/></label><button>Continue</button></form></div></main>; }

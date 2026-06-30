@@ -1,0 +1,3 @@
+import { redirect } from "next/navigation"; import { setAdminSession } from "@/lib/auth";
+async function login(formData: FormData) { "use server"; const password = String(formData.get("password") || ""); if (password && password === process.env.ADMIN_PASSWORD) { await setAdminSession(); redirect("/admin"); } redirect("/admin/login?error=1"); }
+export default function AdminLoginPage() { return <main className="container" style={{padding:'72px 0'}}><div className="panel"><h1>Admin login</h1><form action={login} className="form"><label>Password<input name="password" type="password" required/></label><button type="submit">Login</button></form></div></main>; }

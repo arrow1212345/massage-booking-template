@@ -1,0 +1,1 @@
+import { redirect } from "next/navigation"; import { getClientEmail } from "@/lib/auth"; export default async function ClientPage() { const email = await getClientEmail(); if (!email) redirect("/client/login"); redirect("/client/appointments"); }

@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  RESCHEDULE_REQUIRED
+  COMPLETED
+}
+
+enum ChangeRequestType {
+  RESCHEDULE
+  CANCEL
+}
+
+enum ChangeRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationChannelPolicy {
+  EMAIL_ONLY
+  LINE_ONLY
+  LINE_AND_EMAIL
+  DISABLED
+}
+
+enum NotificationEventType {
+  APPOINTMENT_RECEIVED
+  APPOINTMENT_CONFIRMED
+  APPOINTMENT_CANCELLED
+  APPOINTMENT_CHANGED
+  CHANGE_REQUEST_RECEIVED
+  CHANGE_REQUEST_REPLIED
+}
+
+enum LineMessageStatus {
+  SENT
+  FAILED
+  SKIPPED_NO_LINE
+  SKIPPED_DISABLED
+}
+
+model User {
+  id                 String                     @id @default(cuid())
+  name               String
+  email              String                     @unique
+  phone              String?
+  lineUserId         String?                    @unique @map("line_user_id")
+  lineDisplayName    String?                    @map("line_display_name")
+  notificationPolicy NotificationChannelPolicy  @default(LINE_AND_EMAIL) @map("notification_policy")
+  appointments       Appointment[]
+  changeRequests     AppointmentChangeRequest[]
+  createdAt          DateTime                   @default(now()) @map("created_at")
+  updatedAt          DateTime                   @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Service {
+  id              String                   @id @default(cuid())
+  slug            String                   @unique
+  name            String
+  description     String
+  durationMinutes Int                      @map("duration_minutes")
+  bufferMinutes   Int                      @default(15) @map("buffer_minutes")
+  basePriceCents  Int                      @map("base_price_cents")
+  isActive        Boolean                  @default(true) @map("is_active")
+  sortOrder       Int                      @default(0) @map("sort_order")
+  appointments    Appointment[]
+  locationPrices  ServiceLocationPricing[]
+  createdAt       DateTime                 @default(now()) @map("created_at")
+  updatedAt       DateTime                 @updatedAt @map("updated_at")
+
+  @@map("services")
+}
+
+model Location {
+  id                    String                   @id @default(cuid())
+  name                  String
+  address               String
+  description           String?
+  requiresCustomAddress Boolean                  @default(false) @map("requires_custom_address")
+  isActive              Boolean                  @default(true) @map("is_active")
+  appointments          Appointment[]
+  locationPrices        ServiceLocationPricing[]
+  availabilityRules     AvailabilityRule[]
+  createdAt             DateTime                 @default(now()) @map("created_at")
+  updatedAt             DateTime                 @updatedAt @map("updated_at")
+
+  @@map("locations")
+}
+
+model ServiceLocationPricing {
+  id         String   @id @default(cuid())
+  serviceId  String   @map("service_id")
+  locationId String   @map("location_id")
+  priceCents Int      @map("price_cents")
+  isActive   Boolean  @default(true) @map("is_active")
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, locationId])
+  @@map("service_location_pricings")
+}
+
+model AvailabilityRule {
+  id         String   @id @default(cuid())
+  locationId String   @map("location_id")
+  weekday    Int
+  startTime  String   @map("start_time")
+  endTime    String   @map("end_time")
+  isActive   Boolean  @default(true) @map("is_active")
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, weekday])
+  @@map("availability_rules")
+}
+
+model BlockedTime {
+  id        String   @id @default(cuid())
+  startsAt  DateTime @map("starts_at")
+  endsAt    DateTime @map("ends_at")
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([startsAt, endsAt])
+  @@map("blocked_times")
+}
+
+model Appointment {
+  id                    String                     @id @default(cuid())
+  bookingNumber         String                     @unique @map("booking_number")
+  clientId              String?                    @map("client_id")
+  serviceId             String                     @map("service_id")
+  locationId            String                     @map("location_id")
+  clientName            String                     @map("client_name")
+  clientEmail           String                     @map("client_email")
+  clientPhone           String                     @map("client_phone")
+  customAddress         String?                    @map("custom_address")
+  note                  String?
+  startsAt              DateTime                   @map("starts_at")
+  endsAt                DateTime                   @map("ends_at")
+  priceCents            Int                        @map("price_cents")
+  status                AppointmentStatus          @default(PENDING)
+  googleCalendarEventId String?                    @map("google_calendar_event_id")
+  client                User?                      @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  service               Service                    @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  location              Location                   @relation(fields: [locationId], references: [id], onDelete: Restrict)
+  changeRequests        AppointmentChangeRequest[]
+  createdAt             DateTime                   @default(now()) @map("created_at")
+  updatedAt             DateTime                   @updatedAt @map("updated_at")
+
+  @@index([startsAt, endsAt, status])
+  @@index([clientEmail])
+  @@map("appointments")
+}
+
+model AppointmentChangeRequest {
+  id                  String              @id @default(cuid())
+  appointmentId       String              @map("appointment_id")
+  clientId            String?             @map("client_id")
+  type                ChangeRequestType
+  status              ChangeRequestStatus @default(PENDING)
+  requestedAt         DateTime?           @map("requested_at")
+  requestedLocationId String?             @map("requested_location_id")
+  reason              String
+  adminNote           String?             @map("admin_note")
+  appointment         Appointment         @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  client              User?               @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@map("appointment_change_requests")
+}
+
+model CalendarConnection {
+  id                 String    @id @default(cuid())
+  googleAccountEmail String    @map("google_account_email")
+  accessToken        String    @map("access_token")
+  refreshToken       String?   @map("refresh_token")
+  expiryDate         DateTime? @map("expiry_date")
+  calendarId         String    @default("primary") @map("calendar_id")
+  revokedAt          DateTime? @map("revoked_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  @@map("calendar_connections")
+}
+
+model EmailLog {
+  id           String   @id @default(cuid())
+  toEmail      String   @map("to_email")
+  subject      String
+  status       String
+  errorMessage String?  @map("error_message")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("email_logs")
+}
+
+model LineMessageLog {
+  id           String                @id @default(cuid())
+  eventType    NotificationEventType @map("event_type")
+  status       LineMessageStatus
+  lineUserId   String?               @map("line_user_id")
+  errorMessage String?               @map("error_message")
+  createdAt    DateTime              @default(now()) @map("created_at")
+
+  @@map("line_message_logs")
+}
+
+model NotificationSetting {
+  id            String                    @id @default(cuid())
+  eventType     NotificationEventType     @unique @map("event_type")
+  channelPolicy NotificationChannelPolicy @default(LINE_AND_EMAIL) @map("channel_policy")
+  createdAt     DateTime                  @default(now()) @map("created_at")
+  updatedAt     DateTime                  @updatedAt @map("updated_at")
+
+  @@map("notification_settings")
+}
+
+model SiteSetting {
+  id             String   @id @default("default")
+  siteName       String   @default("Massage Booking Template") @map("site_name")
+  brandName      String   @default("Massage Studio") @map("brand_name")
+  homeTitle      String   @default("Massage appointments made simple") @map("home_title")
+  homeSubtitle   String   @default("A calm booking website for massage therapists and bodywork studios.") @map("home_subtitle")
+  contactEmail   String?  @map("contact_email")
+  contactLineUrl String?  @map("contact_line_url")
+  bookingNotice  String?  @map("booking_notice")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
