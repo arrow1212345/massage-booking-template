@@ -24,7 +24,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <nav className="container nav">
             <Link href="/" className="brand">{brand}</Link>
             <div className="links">
+              <Link href="/about">關於我</Link>
               <Link href="/services">服務項目</Link>
+              <Link href="/locations">服務地點</Link>
               <Link href="/booking/massage-60">立即預約</Link>
               <Link href="/client">客戶中心</Link>
               <Link href="/admin">後台</Link>

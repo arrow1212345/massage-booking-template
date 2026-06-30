@@ -64,7 +64,7 @@ export default async function HomePage() {
               <p className="eyebrow">Who it is for</p>
               <h2>適合想快速上線的按摩服務</h2>
             </div>
-            <p>這個模板不是品牌成品，而是一個可被 Codex 或 Claude Code 快速改成你自己網站的起點。</p>
+            <p>這個模板提供完整網站架構，可替換成你的品牌、服務內容與預約規則。</p>
           </div>
           <div className="grid three">
             {audiences.map((item) => (
@@ -135,17 +135,13 @@ export default async function HomePage() {
       </section>
 
       <section className="section">
-        <div className="container grid two">
-          <div className="panel">
-            <p className="eyebrow">Customize with AI</p>
-            <h2>交給 Codex 或 Claude Code 客製化</h2>
-            <p>README 已整理好架站訪談清單。安裝者可以請 AI 先問清楚品牌、服務、價格、地點、時段、通知、LINE、Email 與 Google Calendar，再開始修改。</p>
+        <div className="container feature-band">
+          <div>
+            <p className="eyebrow">Ready to book</p>
+            <h2>讓客人從了解服務到完成預約</h2>
+            <p>首頁、服務、地點、關於我與分段式預約流程都已準備好。安裝後只要換成自己的品牌、服務內容與地點資訊，就能作為正式網站的起點。</p>
           </div>
-          <div className="panel">
-            <p className="eyebrow">安全提醒</p>
-            <h2>範例站不放正式金鑰</h2>
-            <p>示範站使用假資料。正式部署時，所有資料庫、Email、LINE 與 Google Calendar 金鑰都應放在 Vercel Environment Variables，不要提交到 GitHub。</p>
-          </div>
+          <Link className="button secondary" href="/booking/massage-60">體驗預約流程</Link>
         </div>
       </section>
     </main>

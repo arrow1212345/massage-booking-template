@@ -8,7 +8,7 @@
 
 ### 功能
 
-- 按摩首頁與服務說明頁
+- 按摩首頁、關於我頁、服務說明頁與服務地點頁
 - 線上預約流程：服務、地點、日期、時間與客戶資料
 - 基本後台：預約、服務、地點、可預約時間、Google Calendar、網站設定
 - 客戶中心：查看自己的預約紀錄
@@ -47,8 +47,9 @@ npm run dev
 AI 應先詢問並確認這些內容：
 
 - 品牌名稱、網站名稱、首頁標題、首頁說明文字
+- 關於我內容：個人背景、服務理念、證照、經驗、適合服務的客群
 - 主要服務項目：名稱、介紹、時間長度、價格、緩衝時間、是否啟用
-- 服務地點：店名、地址、是否需要客人填寫到府地址、哪些服務可在該地點預約
+- 服務地點：店名、地址、交通方式、停車資訊、是否需要客人填寫到府地址、哪些服務可在該地點預約
 - 可預約時段：每週可預約星期、開始時間、結束時間、固定休息時段
 - 預約流程：是否需要後台確認、取消或改期規則、預約成功後要顯示什麼
 - 客戶資料欄位：姓名、電話、Email、備註、是否需要地址
@@ -144,7 +145,7 @@ Massage Booking Template is an open-source appointment website template built wi
 
 ### Features
 
-- Massage landing page and service description page
+- Massage landing page, about page, service description page, and locations page
 - Online booking flow for service, location, date, time, and client details
 - Basic admin dashboard for appointments, services, locations, availability, Google Calendar, and site settings
 - Client center for viewing appointment records
@@ -183,8 +184,9 @@ Do not use example credentials, and never commit .env files or production secret
 The agent should ask for and confirm:
 
 - Brand name, site name, homepage title, and homepage description
+- About page content: owner background, service philosophy, certifications, experience, and ideal clients
 - Services: name, description, duration, price, buffer time, and enabled status
-- Locations: studio name, address, whether clients must enter a custom in-home address, and which services are available there
+- Locations: studio name, address, transportation notes, parking notes, whether clients must enter a custom in-home address, and which services are available there
 - Availability: available weekdays, start time, end time, and regular break times
 - Booking workflow: whether admin confirmation is required, cancellation/rescheduling rules, and success page copy
 - Client fields: name, phone, Email, notes, and whether address is required

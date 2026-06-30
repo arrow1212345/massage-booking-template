@@ -261,3 +261,56 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .wizard-actions { position: sticky; bottom: 0; background: rgba(248, 243, 237, .9); backdrop-filter: blur(12px); margin-inline: -22px; padding: 14px 22px 0; }
   .wizard-actions .button, .wizard-actions button { flex: 1; }
 }
+.profile-card {
+  border: 1px solid rgba(222, 208, 196, .95);
+  background: linear-gradient(155deg, rgba(255,255,255,.94), rgba(255,250,245,.78));
+  border-radius: 34px;
+  padding: 30px;
+  box-shadow: var(--shadow);
+}
+.profile-photo {
+  width: 112px;
+  height: 112px;
+  border-radius: 34px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--sage-soft), #fff7ef);
+  color: var(--sage);
+  font-size: 44px;
+  font-weight: 900;
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+}
+.clean-list {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.clean-list li {
+  position: relative;
+  padding-left: 28px;
+}
+.clean-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .72em;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--sage);
+}
+.clean-list.compact { gap: 7px; margin-top: 10px; }
+.location-card { display: flex; flex-direction: column; gap: 4px; }
+.location-address { color: var(--ink); font-weight: 800; }
+.location-detail-block {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 14px;
+}
+.location-detail-block h3 { font-size: 20px; }
+.location-card .button { align-self: flex-start; margin-top: 18px; }
